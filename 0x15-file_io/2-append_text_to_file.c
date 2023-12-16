@@ -1,31 +1,38 @@
-#include "holberton.h"
-
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 /**
- * Text_file_append - put text at the end of file
- * @Name_of_file: apeend the file in.
- * @ContentTheText: the data to append the your f_ile
+ * append_text_to_file - creates a file and puts text in it
+ * with 600 perms (do not change if it exists)
  *
- * Return: when successed, return 1. else, return -1.
+ * @filename: name for file
+ * @text_content: text to put into file
+ *
+ * Return: 1 on success, -1 on failure
  */
-int Text_file_append(const char *Name_of_file, char *ContentTheText)
+int append_text_to_file(const char *filename, char *text_content)
 {
-	ssize_t written_by_who = 0;
-	int d_ff;
+	int file;
+	ssize_t length = 0, inlen = 0;
+	char *ptr;
 
-	if (!Name_of_file)
+	if (filename == NULL)
 		return (-1);
 
-	d_ff = open(Name_of_file, O_WRONLY | O_APPEND);
-
-	if (d_ff < 0)
+	file = open(filename, O_WRONLY | O_APPEND);
+	if (file == -1)
 		return (-1);
 
-	if (ContentTheText)
-		written_by_who = write(d_ff, ContentTheText, _strlen(ContentTheText));
+	if (text_content != NULL)
+	{
+		for (inlen = 0, ptr = text_content; *ptr; ptr++)
+			inlen++;
+		length = write(file, text_content, inlen);
+	}
 
-	close(d_ff);
-
-	if (written_by_who < 0)
+	if (close(file) == -1 || inlen != length)
 		return (-1);
 	return (1);
 }

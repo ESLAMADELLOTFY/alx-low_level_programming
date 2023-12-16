@@ -1,50 +1,46 @@
-#include "holberton.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
 /**
- * TEXTFILEREAD - Reads a text file and writes its content to standard output.
+ * read_textfile - prints text from a file
  *
- * @name_of_file: The name of the file to read from.
- * @l_etters: The number of l_etters to read and print.
+ * @filename: name of the file
+ * @letters: number of characters to read
  *
- * Return: If the name_of_file is NULL, the file cannot be opened or read, or if
- *         the write operation fails or returns an unexpected number of bytes,
- *         return 0. Otherwise, return the actual number of l_etters read and
- *         printed.
+ * Return: actual number of letters read, 0 if end of file
  */
-ssize_t TEXTFILEREAD(const char *name_of_file, size_t l_etters)
+ssize_t read_textfile(const char *filename, size_t letters)
 {
-	char *buffer = NULL;
-	ssize_t be_re;
-	ssize_t write_by;
-	int fd;
+	int file;
+	int length, wrotechars;
+	char *buf;
 
-	if (!(name_of_file && l_etters))
+	if (filename == NULL || letters == 0)
+		return (0);
+	buf = malloc(sizeof(char) * (letters));
+	if (buf == NULL)
 		return (0);
 
-	fd = open(name_of_file, O_RDONLY);
-	if (fd == -1)
-		return (0);
-
-	buffer = malloc(sizeof(char) * l_etters);
-	if (!buffer)
-		return (0);
-
-	be_re = read(fd, buffer, l_etters);
-	close(fd);
-
-	if (be_re < 0)
+	file = open(filename, O_RDONLY);
+	if (file == -1)
 	{
-		free(buffer);
+		free(buf);
 		return (0);
 	}
-	if (!be_re)
-		be_re = l_etters;
-
-	write_by = write(STDOUT_FILENO, buffer, be_re);
-	free(buffer);
-
-	if (write_by < 0)
+	length = read(file, buf, letters);
+	if (length == -1)
+	{
+		free(buf);
+		close(file);
 		return (0);
+	}
 
-	return (write_by);
+	wrotechars = write(STDOUT_FILENO, buf, length);
+
+	free(buf);
+	close(file);
+	if (wrotechars != length)
+		return (0);
+	return (length);
 }

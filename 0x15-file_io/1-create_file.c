@@ -1,53 +1,38 @@
-#include "holberton.h"
-
-
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 /**
- * FileCreater - create a file
- * @filenNAmeame: file cre name
- * @content_text: file tht have data
+ * create_file - creates a file and puts text in it
+ * with 600 perms (do not change if it exists)
  *
- * Return: even successed, return 1. Otherwise return -1.
+ * @filename: name for file
+ * @text_content: text to put into file
+ *
+ * Return: 1 on success, -1 on failure
  */
-int FileCreater(const char *filenNAmeame, char *content_text)
+int create_file(const char *filename, char *text_content)
 {
-	ssize_t written by = 0;
-	int fd;
+	int file;
+	int length = 0, inlen = 0;
+	char *ptr;
 
-	if (!filenNAmeame)
+	if (filename == NULL)
 		return (-1);
 
-	fd = open(filenNAmeame, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-
-	if (fd < 0)
+	file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (file == -1)
 		return (-1);
 
-	if (content_text)
-		written by = write(fd, content_text, _strlen(content_text));
+	if (text_content != NULL)
+	{
+		for (inlen = 0, ptr = text_content; *ptr; ptr++)
+			inlen++;
+		length = write(file, text_content, inlen);
+	}
 
-	close(fd);
-
-	if (written by < 0)
+	if (close(file) == -1 || inlen != length)
 		return (-1);
 	return (1);
 }
-
-/**
- * Strlen -Length of the string
- * @string: the string to measure
- *
- * Return: the length of str, or -1 if str is NULL
- */
-ssize_t Strlen(const char *string)
-{
-	ssize_t leng = 0;
-
-	if (!string)
-		return (-1);
-
-	while (*string++)
-		++leng;
-
-	return (leng);
-}
-
-
