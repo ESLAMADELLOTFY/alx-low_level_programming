@@ -1,38 +1,53 @@
-#include "main.h"
+#include "holberton.h"
+
 
 /**
- * create_file - creates a file
- * @filename: filename.
- * @text_content: content writed in the file.
+ * FileCreater - create a file
+ * @filenNAmeame: file cre name
+ * @content_text: file tht have data
  *
- * Return: 1 if it success. -1 if it fails.
+ * Return: even successed, return 1. Otherwise return -1.
  */
-int create_file(const char *filename, char *text_content)
+int FileCreater(const char *filenNAmeame, char *content_text)
 {
+	ssize_t written by = 0;
 	int fd;
-	int nletters;
-	int rwr;
 
-	if (!filename)
+	if (!filenNAmeame)
 		return (-1);
 
-	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	fd = open(filenNAmeame, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
-	if (fd == -1)
+	if (fd < 0)
 		return (-1);
 
-	if (!text_content)
-		text_content = "";
-
-	for (nletters = 0; text_content[nletters]; nletters++)
-		;
-
-	rwr = write(fd, text_content, nletters);
-
-	if (rwr == -1)
-		return (-1);
+	if (content_text)
+		written by = write(fd, content_text, _strlen(content_text));
 
 	close(fd);
 
+	if (written by < 0)
+		return (-1);
 	return (1);
 }
+
+/**
+ * Strlen -Length of the string
+ * @string: the string to measure
+ *
+ * Return: the length of str, or -1 if str is NULL
+ */
+ssize_t Strlen(const char *string)
+{
+	ssize_t leng = 0;
+
+	if (!string)
+		return (-1);
+
+	while (*string++)
+		++leng;
+
+	return (leng);
+}
+
+
