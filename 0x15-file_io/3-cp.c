@@ -7,56 +7,6 @@
 #define BUFSIZE 1024
 
 
-/**
- * main - saod askmd ksadfas osad 
- * @ar_gc: count of argu
- * @ar_gv: the argument values
- *
- * Return: Always 1
- */
-int main(int ar_gc, const char *ar_gv[])
-{
-	int fd_in, fd_out;
-	ssize_t ree;
-	char buffer[BUFSIZE];
-
-	if (ar_gc != 3)
-	{
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
-		exit(97);
-	}
-	fd_in = open(ar_gv[1], O_RDONLY);
-	if (fd_in < 0)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", ar_gv[1]);
-		exit(98);
-	}
-	fd_out = open(ar_gv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (fd_out < 0)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", ar_gv[2]);
-		_close(fd_in);
-		exit(99);
-	}
-	while ((ree = _read(ar_gv[1], fd_in, buffer, BUFSIZE)))
-	{
-		if (ree < 0)
-		{
-			_close(fd_in);
-			_close(fd_out);
-			exit(98);
-		}
-		if (_write(ar_gv[2], fd_out, buffer, ree) < 0)
-		{
-			_close(fd_in);
-			_close(fd_out);
-			exit(99);
-		}
-	}
-	if ((_close(fd_in) | _close(fd_out)) < 0)
-		exit(100);
-	return (0);
-}
 
 /**
  * _read - an ksdd sdds sldksdsdos sisisi
@@ -69,10 +19,10 @@ int main(int ar_gc, const char *ar_gv[])
  */
 ssize_t _read(const char *Name_file, int feed_back, char *buffera, size_t Co_nt)
 {
-	ssize_t ree = read(feed_back, buffera, Co_nt);
+	ssize_t pread = read(feed_back, buffera, Co_nt);
 
-	if (ree > -1)
-		return (ree);
+	if (pread > -1)
+		return (pread);
 	dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", Name_file);
 	return (-1);
 }
@@ -93,11 +43,11 @@ int _close(int feed_back)
 }
 
 /**
- * _write - write to a file and print an error message upon failure
- * @Name_file: the name of the file to write to
- * @feed_back: the file descriptor to write to
- * @buffera: the buffer to read from
- * @Co_nt: the number of bytes to write
+ * _write - kjbkjbk khhk hgkg ure
+ * @Name_file: m,n  kfx dxkv dvjd dsk
+ * @feed_back: ksd fdsfsd fsd gfsd 
+ * @buffera: asdsalda  dakldad adn
+ * @Co_nt:xjczf xdsasfseterydt yrt yrt
  *
  * Return: The number of bytes written, or -1 upon failure
  */
@@ -111,4 +61,54 @@ ssize_t _write(const char *Name_file, int feed_back, const char *buffera, size_t
 	return (-1);
 }
 
+/**
+ * main - saod askmd ksadfas osad 
+ * @ar_gc: count of argu
+ * @ar_gv: the argument values
+ *
+ * Return: Always 1
+ */
+int main(int ar_gc, const char *ar_gv[])
+{
+	int fd_in, fd_out;
+	ssize_t pread;
+	char buffer[BUFSIZE];
+
+	if (ar_gc != 3)
+	{
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
+	}
+	fd_in = open(ar_gv[1], O_RDONLY);
+	if (fd_in < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", ar_gv[1]);
+		exit(98);
+	}
+	fd_out = open(ar_gv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (fd_out < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", ar_gv[2]);
+		close(fd_in);
+		exit(99);
+	}
+	while ((pread = _read(ar_gv[1], fd_in, buffer, BUFSIZE)))
+	{
+		if (pread < 0)
+		{
+			_close(fd_in);
+			_close(fd_out);
+			exit(98);
+		}
+		if (pwrite (ar_gv[2], fd_out, buffer, pread) < 0)
+		{
+			_close(fd_in);
+			_close(fd_out);
+			exit(99);
+		}
+	}
+	if ((_close(fd_in) | _close(fd_out)) < 0)
+		exit(100);
+	return (0);
+}
 
